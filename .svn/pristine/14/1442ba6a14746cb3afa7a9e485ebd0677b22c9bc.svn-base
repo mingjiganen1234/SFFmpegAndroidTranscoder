@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:layout_width="100dp"  
+    android:layout_height="300dp"  
+    android:background="@drawable/grouplist_item_bg_normal"  
+    android:orientation="vertical"   >  
+  
+    <Button  
+        android:id="@+id/pop_zengyi"  
+        android:layout_width="fill_parent"  
+        android:layout_height="wrap_content"  
+        android:layout_weight="1"  
+        android:gravity="left" 
+        android:textColor="@android:color/white"
+        android:background="@android:color/transparent"  
+        android:text="增益>>" />  
+  
+    <Button  
+        android:id="@+id/pop_tiaojiao"  
+        android:layout_width="fill_parent"  
+        android:layout_height="wrap_content"  
+        android:layout_weight="1"  
+        android:gravity="left" 
+         android:textColor="@android:color/white"
+        android:background="@android:color/transparent"  
+        android:text="调焦>>" />  
+  
+    <Button  
+        android:id="@+id/pop_moshi"  
+        android:layout_width="fill_parent"  
+        android:layout_height="wrap_content"  
+        android:layout_weight="1"  
+        android:gravity="left" 
+         android:textColor="@android:color/white"
+        android:background="@android:color/transparent"  
+        android:text="模式>>" />  
+  
+  
+    <Button  
+        android:id="@+id/pop_shipin"  
+        android:layout_width="fill_parent"  
+        android:layout_height="wrap_content"  
+        android:layout_weight="1"  
+        android:gravity="left" 
+         android:textColor="@android:color/white"
+        android:background="@android:color/transparent"  
+        android:text="视频>>" />  
+  
+    <Button  
+        android:id="@+id/pop_tupianku"  
+        android:layout_width="fill_parent"  
+        android:layout_height="wrap_content"  
+        android:layout_weight="1"  
+        android:gravity="left" 
+         android:textColor="@android:color/white"
+        android:background="@android:color/transparent"  
+        android:text="图片库>>" />  
+  
+    <Button  
+        android:id="@+id/pop_shipinku"  
+        android:layout_width="fill_parent"  
+        android:layout_height="wrap_content"  
+        android:layout_weight="1"  
+        android:gravity="left" 
+         android:textColor="@android:color/white"
+        android:background="@android:color/transparent"  
+        android:text="视频库>>" />  
+	<Button  
+        android:id="@+id/pop_guangzijishu"  
+        android:layout_width="fill_parent"  
+        android:layout_height="wrap_content"  
+        android:layout_weight="1"  
+        android:gravity="left" 
+         android:textColor="@android:color/white"
+        android:background="@android:color/transparent"  
+        android:text="光子计数>>" />  
+	<Button  
+        android:id="@+id/pop_wenjianguanli"  
+        android:layout_width="fill_parent"  
+        android:layout_height="wrap_content"  
+        android:layout_weight="1"  
+        android:gravity="left" 
+         android:textColor="@android:color/white"
+        android:background="@android:color/transparent"    
+        android:text="文件管理>>" />  
+      
+</LinearLayout>  

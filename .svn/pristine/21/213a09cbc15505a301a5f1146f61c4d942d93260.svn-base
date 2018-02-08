@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/grey" 
+    android:orientation="vertical" >
+
+    <RelativeLayout	
+   	    android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+   	 	android:background="@android:color/transparent" 
+   	    android:orientation="vertical" >
+	    <FrameLayout
+	        android:id="@+id/camera_preview"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent" >
+	    </FrameLayout>
+	    <TextView
+	        android:id="@+id/mc_zengyi"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentRight="true"
+	        android:text="0"
+	        android:textColor="@color/white"
+	        android:textSize="25sp" />
+	</RelativeLayout>
+	<LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+  	    android:layout_alignParentLeft="true"
+        android:background="@android:color/transparent" 
+        android:orientation="horizontal" >
+	   
+	    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp" 
+        android:text="模式:"
+        android:textColor="@android:color/white"/>
+	
+		 <TextView
+        android:id="@+id/mc_moshi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp" 
+        android:text="可见        "
+        android:textColor="@android:color/white"/>
+		 
+		 <TextView
+        android:id="@+id/mc_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp" 
+        android:text="2017/02/28-00:00:00"
+        android:textColor="@android:color/white"/>
+		  <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp" 
+        android:text="    电量:"
+        android:textColor="@android:color/white"/>
+		  <TextView
+        android:id="@+id/mc_dianliang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp" 
+        android:text="0%"
+        android:textColor="@android:color/white"/>
+	</LinearLayout>
+	    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="63dp"
+        android:layout_alignParentBottom="true"
+  	    android:layout_alignParentLeft="true"
+        android:background="@android:color/transparent" 
+        android:orientation="horizontal" >
+
+        
+
+   		 <Button
+	        android:id="@+id/btn_popwindow"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="菜单"
+	        android:textSize="20sp" />
+		<Button
+            android:id="@+id/button_capture"
+            android:text="CAP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+		<Button
+            android:id="@+id/button_crop"
+            android:text="CROP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+        android:id="@+id/mc_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40sp" 
+        android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/saveaddr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="addr"
+            android:textColor="@color/white"
+            android:textSize="25sp" />
+
+    </LinearLayout>
+	<TextView
+	        android:id="@+id/textView1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentRight="true"
+	        android:layout_marginRight="22dp"
+	        android:text="增益："
+	        android:textColor="@color/white"
+	        android:textSize="25sp" />
+	<TextView
+		    android:id="@+id/mc_auto"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginRight="22dp"
+	        android:text="自动"
+	        android:textColor="@color/white"
+	        android:textSize="25sp" />
+</RelativeLayout>

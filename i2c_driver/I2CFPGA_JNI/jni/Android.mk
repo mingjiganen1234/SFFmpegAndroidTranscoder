@@ -1,0 +1,7 @@
+LOCAL_PATH := $(call my-dir)
+include $(CLEAR_VARS)
+LOCAL_MODULE    := I2CFPGA
+LOCAL_SRC_FILES := I2CFPGA.c
+LOCAL_LDLIBS += -llog 
+LOCAL_LDLIBS +=-lm
+include $(BUILD_SHARED_LIBRARY)

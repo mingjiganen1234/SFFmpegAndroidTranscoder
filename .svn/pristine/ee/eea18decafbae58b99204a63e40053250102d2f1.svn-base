@@ -1,0 +1,5 @@
+package com.leixiaohua1020.sffmpegandroidtranscoder;
+
+public class SaveAddr {
+	public static int addr=3;
+}

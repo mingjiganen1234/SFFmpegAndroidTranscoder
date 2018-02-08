@@ -1,0 +1,19 @@
+package com.leixiaohua1020.sffmpegandroidtranscoder;
+
+public class Parameter {
+	public static int addr=2;
+	//state=1,start;state=2,stop. state=3,none
+	public static int recoder_state=0;
+	//
+	public static int moshi=0;
+	public static int zengyi=0;
+	public static int tiaojiao=0;
+	public static String path="1";
+	public static String videoName;
+	public static int uartInt;
+	public static float imageXFloat;
+	public static float imageYFloat=1234;
+	public static boolean clickThread=true;
+	public static int  buttonSelect=1;
+	public static boolean showPop=true;
+}

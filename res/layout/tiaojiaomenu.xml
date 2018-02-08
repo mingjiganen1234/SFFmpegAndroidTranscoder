@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:layout_width="200px"  
+    android:layout_height="75px"  
+    android:gravity="center_vertical" 
+    android:id="@+id/tiaojiaomenu"
+    android:background="@android:color/transparent" 
+    android:orientation="horizontal"   >
+
+
+
+    <Button
+        android:id="@+id/btn_tj_add"
+        android:layout_width="66px"
+        android:layout_height="75px"
+        android:orientation="horizontal" 
+         android:background="@android:color/transparent" 
+        android:layout_alignLeft="@+id/imageView1"
+        android:layout_alignTop="@+id/imageView1"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:text="调焦+" />
+
+    <Button
+        android:id="@+id/btn_tj_auto"
+        android:layout_width="66px"
+        android:layout_height="75px"
+        android:orientation="horizontal" 
+        android:background="@android:color/transparent" 
+        android:layout_alignTop="@+id/imageView1"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:text="自动" />
+
+    <Button
+        android:id="@+id/btn_tj_dec"
+        android:layout_width="66px"
+        android:layout_height="75px"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
+        android:orientation="horizontal"
+        android:text="调焦-"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+      
+</RelativeLayout>  

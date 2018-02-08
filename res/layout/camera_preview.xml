@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/grey" 
+    android:orientation="vertical" >
+
+    <RelativeLayout	
+   	    android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+   	 	android:background="@android:color/transparent" 
+   	    android:orientation="vertical" >
+	    <FrameLayout
+	        android:id="@+id/camera_preview"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent" >
+
+	        
+
+	    </FrameLayout>
+	    <ImageView
+	        android:id="@+id/btnMouse"
+	        android:layout_width="100dp"
+	        android:layout_height="25dp"
+	        android:background="#e0000000"   />
+	    <ImageView
+	        android:id="@+id/imageMenu"
+	        android:layout_alignParentTop="true"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginTop="140dp"
+	        android:layout_width="100dp"
+	        android:layout_height="225dp"
+	        android:background="@android:color/transparent"  />
+
+	    <TextView
+	        android:id="@+id/mc_zengyi"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentRight="true"
+	        android:text="1"
+	        android:textColor="@color/white"
+	        android:textSize="20sp" />
+	</RelativeLayout>
+	
+	<RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:background="@android:color/transparent" 
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+	    
+				 <TextView
+				     android:id="@+id/mc_date"
+				     android:layout_width="wrap_content"
+				     android:layout_height="30dp"
+				     android:layout_alignParentLeft="true"
+				     android:layout_marginLeft="3.0dip"
+				     android:text="2017/02/28-00:00:00"
+				     android:textColor="@android:color/white"
+				     android:textSize="20sp" />
+
+				 <TextView
+				     android:id="@+id/textViewStaticMoShi"
+				     android:layout_width="wrap_content"
+				     android:layout_height="30dp"
+				     android:layout_marginLeft="100dp"
+				     android:layout_toRightOf="@+id/mc_date"
+				     android:text="模式:"
+				     android:textColor="@android:color/white"
+				     android:textSize="20sp" />
+			
+				 <TextView
+		        android:id="@+id/mc_moshi"
+		        android:layout_width="wrap_content"
+		        android:layout_height="30dp"
+		        android:layout_toRightOf="@+id/textViewStaticMoShi"
+		        android:textSize="20sp" 
+		        android:text="可见        "
+		        android:textColor="@android:color/white"/>
+		
+			    <TextView
+		        android:layout_width="wrap_content"
+		        android:layout_height="30dp"
+		        android:textSize="20sp" 
+		        android:layout_marginRight="3.0dip"
+		        android:layout_toLeftOf="@+id/mc_dianliang"
+		        android:text="电量:"
+		        android:textColor="@android:color/white"/>
+				<TextView
+		        android:id="@+id/mc_dianliang"
+		        android:layout_width="50dp"
+		        android:layout_height="30dp"
+		        android:textSize="20sp" 
+		        android:layout_alignParentRight="true"
+		        android:text="100%"
+		        android:textColor="@android:color/white"/>
+	</RelativeLayout>
+	    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="63dp"
+        android:layout_alignParentBottom="true"
+  	    android:layout_alignParentLeft="true"
+        android:background="@android:color/transparent" 
+        android:orientation="horizontal" >
+
+        
+
+   		 <Button
+	        android:id="@+id/btn_popwindow"
+	        android:layout_width="1dp"
+	        android:layout_height="1dp"
+	        android:text="  "
+	        android:textSize="20sp" 
+	        android:background="@android:color/transparent"/>
+		<Button
+            android:id="@+id/button_capture"
+            android:text="  "
+            android:layout_width="1dp"
+	        android:layout_height="1dp" 
+            android:background="@android:color/transparent"/>
+
+        <TextView
+        android:id="@+id/mc_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40sp" 
+        android:textColor="@color/white" />
+        
+
+        
+
+    </LinearLayout>
+    <TextView
+	        android:id="@+id/textViewStaticTiaojiao"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_toLeftOf="@+id/textViewValueOfTiaoJiao"
+	        android:layout_marginRight="0dp"
+	        android:text="调焦:"
+	        android:textColor="@color/white"
+	        android:textSize="20sp" />
+    <TextView
+	        android:id="@+id/textViewValueOfTiaoJiao"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_toLeftOf="@+id/textViewStaticZengYi"
+	        android:layout_marginRight="22dp"
+	        android:text="1"
+	        android:textColor="@color/white"
+	        android:textSize="20sp" />
+	<TextView
+	        android:id="@+id/textViewStaticZengYi"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentRight="true"
+	        android:layout_marginRight="30dp"
+	        android:text="增益:"
+	        android:textColor="@color/white"
+	        android:textSize="20sp" />
+	<TextView
+			        android:id="@+id/textViewMenuState"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_alignParentBottom="true"
+			        android:layout_alignParentLeft="true"
+        			android:textColor="@color/white"
+       			 	android:textSize="20sp" />
+	<TextView
+            android:id="@+id/saveaddr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Udisk"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/textViewStaticTiaojiao"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+	<TextView
+            android:id="@+id/textViewGuangZi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="光子数:0"
+            android:layout_marginRight="100dp"
+            android:layout_toLeftOf="@+id/saveaddr"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+</RelativeLayout>

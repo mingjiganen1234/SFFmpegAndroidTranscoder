@@ -1,0 +1,7 @@
+package com.leixiaohua1020.sffmpegandroidtranscoder;
+
+public class Parameter {
+	public static int addr=2;
+	//state=1,start;state=2,stop. state=3,none
+	public static int recoder_state=0;
+}

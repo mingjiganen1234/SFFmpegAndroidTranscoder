@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >  
+    
+
+  
+    <item  
+        android:id="@+id/zengyi"  
+        android:background="@android:color/transparent" 
+        android:title="增益>>"/>  
+    <item  
+        android:id="@+id/tiaojiao"  
+        android:title="调焦>>"/>  
+    <item  
+        android:id="@+id/moshi"  
+        android:title="模式>>"/>  
+    <item  
+        android:id="@+id/shipin"  
+        android:title="视频>>"/>  
+    <item  
+        android:id="@+id/tupianku"  
+        android:title="图片库>>"/>  
+    <item  
+        android:id="@+id/shipinku"  
+        android:title="视频库>>"/>  
+     <item  
+        android:id="@+id/guangzijishu"  
+        android:title="光子计数>>"/>  
+    <item   
+        android:title="文件管理>>">
+		<menu>
+            <!-- 定义一组单选菜单项 -->
+            <group android:checkableBehavior="single">
+                <!-- 定义多个菜单项 -->
+                <item
+                    android:id="@+id/addrSD"
+                    android:title="SD"/>
+                <item
+                    android:id="@+id/addrUdisk"
+                    android:title="Udisk"/>
+               
+            </group>
+        </menu>
+		
+		
+	</item>
+  
+</menu>  

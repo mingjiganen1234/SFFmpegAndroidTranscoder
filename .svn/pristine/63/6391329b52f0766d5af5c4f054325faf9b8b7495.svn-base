@@ -1,0 +1,632 @@
+/**
+ * 最简单的基于FFmpeg的转码器-安卓
+ * Simplest FFmpeg Android Transcoder
+ * 
+ * 雷霄骅  Lei Xiaohua
+ * leixiaohua1020@126.com
+ * 马小雨  Ma Xiaoyu
+ * maxiaoyucuc@163.com
+ * 中国传媒大学/数字电视技术
+ * Communication University of China / Digital TV Technology
+ * http://blog.csdn.net/leixiaohua1020
+ * 
+ * 
+ * 本程序是安卓平台下的转码器。它移植于ffmpeg.c命令行工具。
+ * 
+ * This software is a Transcoder in Android.
+ * It is transplanted from ffmpeg.c command line tools.
+ * 
+ */
+package com.leixiaohua1020.sffmpegandroidtranscoder;
+
+
+import java.io.File;
+import java.util.List;
+
+import android.os.Bundle;
+import android.os.Environment;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.app.Dialog;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.view.Window;
+import android.content.Intent;
+import android.view.WindowManager;
+import android.widget.TextView;
+import android.widget.FrameLayout;
+import android.os.Message;
+import android.os.Handler;
+import android.view.Gravity;
+import android.text.TextUtils;
+import android.text.format.DateFormat;
+import android.app.AlertDialog;  
+import android.content.Context;  
+import android.content.DialogInterface;  
+import android.graphics.Picture;
+
+public class MainActivity extends Activity implements OnClickListener {
+		private CameraPreview mPreview;
+		public static final int MEDIA_TYPE_IMAGE = 1;
+		public static final int MEDIA_TYPE_VIDEO = 2;
+		private FrameLayout preview;
+		private TextView timeText;
+		private TextView dianliang=null;
+	    private TextView saveaddr; 
+	    private TextView textMoshi;
+	    private TextView textZengyi;
+	    private TextView textTiaojiao;
+	    PopMenu pop_menu;
+	    Dialog dialog;
+	    
+	    private String savePath="1";
+	   /*I2CFPGA*/
+	    I2CFPGA fpga = new I2CFPGA();
+		//popupWindow
+		private Button button;
+		ImageView btnMouse;
+		private String poptest="poptest";
+		
+		
+
+		
+		
+		@Override
+		protected void onCreate(Bundle savedInstanceState) {
+			// TODO Auto-generated method stub
+			
+			super.onCreate(savedInstanceState);
+			requestWindowFeature(Window.FEATURE_NO_TITLE);  
+			this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			setContentView(R.layout.camera_preview);
+			btnMouse=(ImageView)findViewById(R.id.btnMouse);
+			Parameter.imageYFloat=1234;
+			/*一开始的时候把这个正方形消失掉*/
+			ObjectAnimator y = ObjectAnimator.ofFloat(btnMouse, "y", btnMouse.getY(), Parameter.imageYFloat);
+            ObjectAnimator x = ObjectAnimator.ofFloat(btnMouse, "x", btnMouse.getX(), Parameter.imageXFloat);
+
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.playTogether(x, y);
+            animatorSet.start();
+            
+			Parameter.clickThread=true;
+			pop_menu = new PopMenu(this, onClickListener); 
+			Intent intent = getIntent();
+			if(intent!=null){
+				if(!TextUtils.isEmpty(intent.getStringExtra("filepath"))){
+					String filepathString = intent.getStringExtra("filepath");
+					Log.d("MainActivity", filepathString);
+				//	new CropThread().start();
+				}
+				
+			}
+			
+			
+	        mPreview = new CameraPreview(this);
+	        preview = (FrameLayout) findViewById(R.id.camera_preview);
+	        preview.addView(mPreview);
+	        
+	        Button myButton_capture=(Button)findViewById(R.id.button_capture);
+	        Button myButton_crop=(Button)findViewById(R.id.button_crop);
+	        timeText = (TextView) findViewById(R.id.mc_date);
+	        dianliang=(TextView)findViewById(R.id.mc_dianliang);
+
+	        saveaddr = (TextView)findViewById(R.id.saveaddr);
+	        textMoshi =(TextView)findViewById(R.id.mc_moshi);
+	        textZengyi =(TextView)findViewById(R.id.mc_zengyi);
+	        textTiaojiao =(TextView)findViewById(R.id.mc_auto);
+	        
+	        
+	        fpga.Open();
+	        Log.d("ffmright","click2 com3 open");
+			//popupWindow
+			button = (Button) findViewById(R.id.btn_popwindow);
+			button.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+//					button.getTop();
+//					int[] location = new int[2];  
+//				    v.getLocationOnScreen(location);  
+//					showPopupWindow(location[0], location[1]);
+				}
+			});
+			
+	      myButton_capture.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mPreview.takePhoto();
+			}
+		});
+	    myButton_crop.setOnClickListener(new OnClickListener() {
+			public void onClick(View arg0){
+				
+				String cmdline="ffmpeg -y -i /mnt/sdcard2/recordtest/201211012.mp4 -vf crop=720:576:0:0 /mnt/sdcard2/21.mp4";
+		        String[] argv=cmdline.split(" ");
+		        Log.d("ffm",cmdline);
+		        //Log.d("ffm",argv);
+		        Integer argc=argv.length;
+		        ffmpegcore(argc,argv);
+			}
+		});
+	        
+	        new TimeThread().start(); //启动新的线程
+	        new CropThread().start(); //启动新的线程
+	        if(Parameter.clickThread){
+	        	new ClickThread().start();
+	        	Parameter.clickThread=false;
+	        }
+	        
+		}
+		class TimeThread extends Thread {
+	        @Override
+	        public void run() {
+	            do {
+	                try {
+	                    Thread.sleep(1000);
+	                    Message msg = new Message();
+	                    msg.what = 1;  //消息(一个整型值)
+	                    mHandler.sendMessage(msg);// 每隔1秒发送一个msg给mHandler
+	                } catch (InterruptedException e) {
+	                    e.printStackTrace();
+	                }
+	            } while (true);
+	        }
+	    }
+		/*Uart触发事件*/
+		class ClickThread extends Thread {
+	        @Override
+	        public void run() {
+	        	int i=0;
+	        	serial com3=new serial();
+	        	com3.Open(3, 115200);
+	            do {
+	            	
+	                try {
+	                    Thread.sleep(50);
+	                    int[] RX = com3.Read();
+	                    i++;
+	                    if(i%100==0) Log.d("ffmright","thread click run ");
+	                    if(RX != null){
+							String uartString=(new String(RX, 0, RX.length));
+							RX=null;
+							Parameter.uartInt=Integer.valueOf(uartString);
+							Log.d("ffmright","thread start1 ");
+		                    Message msg = new Message();
+		                    msg.what = 3;  //消息(一个整型值)
+		                    mHandler.sendMessage(msg);// 每隔50ms送一个msg给mHandler
+		                    
+	                    }
+	                } catch (InterruptedException e) {
+	                    e.printStackTrace();
+	                }
+	            } while (true);
+	        }
+	    }
+		class CropThread extends Thread {
+	        @Override
+	        public void run() {
+	            do {
+	                Message msg;
+	                //Log.d("ffm","path new"+savePath+Parameter.path);
+					if(savePath!=Parameter.path)
+					{
+						
+						savePath=Parameter.path;
+						Log.d("ffmright","path new"+savePath+Parameter.path);
+						
+					    File file = new File(savePath);
+					    while(!file.exists());
+					
+					    
+					
+					    msg = new Message();
+					    msg.what = 2;  //消息(一个整型值)
+					    Log.d("ffmright","msg 2 send ");
+					    mHandler.sendMessageDelayed(msg, 10000);
+               // mHandler.sendMessagedelay(msg);// 每隔1秒发送一个msg给mHandler
+					}
+					
+						
+	            } while (true);
+	        }
+	    }
+		//在主线程里面处理消息并更新UI界面
+	    private Handler mHandler = new Handler(){
+	        @Override
+	        public void handleMessage(Message msg) {
+	            super.handleMessage(msg);
+	            switch (msg.what) {
+	            case 1:
+	            	long sysTime = System.currentTimeMillis();
+	                CharSequence sysTimeStr = DateFormat.format("yyyy/MM/dd-hh:mm:ss", sysTime);
+	                timeText.setText(sysTimeStr); //更新时间
+	                Intent intentDianLiang=new Intent();
+	                int current=intentDianLiang.getIntExtra("level",100);//获得当前电量
+	                int total=intentDianLiang.getIntExtra("scale", 100);//获得总电量
+	                int percent=current*100/total;
+	                dianliang.setText(percent+"%");
+	                /*修改存储地址的显示*/
+	                switch(Parameter.addr){
+	                case 1:	
+	                	saveaddr.setText("Udisk");
+	                	break;
+	                case 2:	
+	                	saveaddr.setText("SD");
+	                	break;
+	                case 3:	
+	                	saveaddr.setText("local");
+	                	break;
+	                default: break;
+	                }
+	                /*修改模式的显示*/
+	                switch(Parameter.moshi){
+	                case 0:
+	                	textMoshi.setText("融合");
+	                	break;
+	                case 1:
+	                	textMoshi.setText("可见");
+	                	break;
+	                case 2:
+	                	textMoshi.setText("紫外");
+	                	break;
+	                
+	                default: break;
+	                }
+	                
+	                switch(Parameter.tiaojiao){
+	                case 0:
+	                	textTiaojiao.setText("自动");
+	                	break;
+	                case 1:
+	                	textMoshi.setText("手动");
+	                	break;
+	                case 2:
+	                	textMoshi.setText("手动");
+	                	break;
+	                default: break;
+	                }
+	                break;
+	            case 2:
+//	            	String cmdline="ffmpeg -y -i  "+savePath+"  -vf crop=720:576:0:0 /mnt/sdcard2/1.mp4";
+	            	//+Parameter.videoName;
+	            	String cmdline="ffmpeg -y -i "+savePath+" -vf crop=720:576:0:0 "+savePath;
+	 		       
+    		        String[] argv=cmdline.split(" ");
+    		        Integer argc=argv.length;
+    		        Log.d("ffm",cmdline+"_cmd2");
+    		     //   ffmpegcore(argc,argv);
+	            	break;
+	            case 3:
+	            	switch (Parameter.uartInt) {
+					case 1:
+						showPopupWindow(pop_menu);
+						Parameter.imageYFloat=40;
+						Parameter.buttonSelect=1;
+						Log.d("ffmright","click : "+Parameter.uartInt+":"+Parameter.imageXFloat+":"+Parameter.imageYFloat);
+						break;
+					case 2:
+						
+						if(Parameter.imageYFloat<200){
+							Parameter.buttonSelect=Parameter.buttonSelect+1;
+							Parameter.imageYFloat=Parameter.imageYFloat+25;
+						}
+//						Log.d("ffmright","click : "+Parameter.uartInt+":"+Parameter.imageXFloat+":"+Parameter.imageYFloat);
+						break;
+					case 3://take photo
+						mPreview.takePhoto();
+						Log.d("ffmright","take photo:");
+						
+						break;
+					case 4:
+						switch(Parameter.buttonSelect){
+						case 1://zengyi -
+		                	fpga.Ioctl(11, 0);
+		                	Parameter.zengyi=Parameter.zengyi-1;
+		                	textZengyi.setText(String.valueOf(Parameter.zengyi));
+		                	break;
+						case 2://tiaojiao 
+							break;
+						}
+						
+						break;
+					case 5:
+						switch(Parameter.buttonSelect){
+						case 1:
+							showDialog_zengyi(MainActivity.this);
+							break;
+						case 2:
+							showDialog_tiaojiao(MainActivity.this);
+							break;
+						case 3:
+							showDialog_moshi(MainActivity.this);
+							break;
+						case 4:
+							mPreview.camera_release();
+							Parameter.clickThread=false;
+							Log.d("ffmright","Mainactivity finish");
+							 Intent intent = new Intent();
+								intent.setClass(MainActivity.this,MediaRecorder_c.class);
+								MainActivity.this.startActivity(intent);
+								finish();
+							break;
+						case 8:
+							showDialog_wenjianguanli(MainActivity.this);
+							break;
+						}
+						showPopupWindow(pop_menu);
+						Log.d("ffmright","click :button click :"+Parameter.uartInt+":"+Parameter.imageXFloat+":"+Parameter.imageYFloat);
+						break;
+					case 6:
+						switch(Parameter.buttonSelect){
+						case 1://zengyi -
+							fpga.Ioctl(10, 0);
+		                	Parameter.zengyi=Parameter.zengyi+1;
+		                	textZengyi.setText(String.valueOf(Parameter.zengyi));
+		                	break;
+						case 2://tiaojiao 
+							break;
+						}
+						
+						Log.d("ffmright","click : "+Parameter.uartInt+":"+Parameter.imageXFloat+":"+Parameter.imageYFloat);
+						break;
+					case 8:
+						if(Parameter.imageYFloat>60){
+							Parameter.buttonSelect=Parameter.buttonSelect-1;
+							Parameter.imageYFloat=Parameter.imageYFloat-25;
+						}
+//						Log.d("ffmright","click : "+Parameter.uartInt+":"+Parameter.imageXFloat+":"+Parameter.imageYFloat);
+						break;
+					case 9:
+						if(dialog!=null)dialog.dismiss();
+						if(!Parameter.showPop)showPopupWindow(pop_menu);
+						break;
+					default:
+						break;
+					}
+	            	ObjectAnimator y = ObjectAnimator.ofFloat(btnMouse, "y", btnMouse.getY(), Parameter.imageYFloat);
+	                ObjectAnimator x = ObjectAnimator.ofFloat(btnMouse, "x", btnMouse.getX(), Parameter.imageXFloat);
+
+	                AnimatorSet animatorSet = new AnimatorSet();
+	                animatorSet.playTogether(x, y);
+	                animatorSet.setDuration(0);
+	                animatorSet.start();
+	            	break;
+	            default: break;
+
+	            }
+	        }
+	    };
+	   
+	    
+		@Override
+		protected void onDestroy() {
+			// TODO Auto-generated method stub
+			Log.d("ffmright","Mainactivity destroy");
+			super.onDestroy();
+		}
+
+
+
+		@Override
+		public void onClick(View arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		/*popupWindow*/
+		
+		public void showPopupWindow(PopMenu pop_menu) {
+			Log.d(poptest,"POPWINDOW layout");
+			
+			if(Parameter.showPop){
+				pop_menu.showAtLocation(findViewById(R.id.camera_preview), Gravity.LEFT, 0, 0);
+				Parameter.showPop=false;
+			}
+			else{
+				pop_menu.dismiss();
+				Parameter.imageYFloat=1234;
+				/*一开始的时候把这个正方形消失掉*/
+				ObjectAnimator y = ObjectAnimator.ofFloat(btnMouse, "y", btnMouse.getY(), Parameter.imageYFloat);
+	            ObjectAnimator x = ObjectAnimator.ofFloat(btnMouse, "x", btnMouse.getX(), Parameter.imageXFloat);
+
+	            AnimatorSet animatorSet = new AnimatorSet();
+	            animatorSet.playTogether(x, y);
+	            animatorSet.start();
+				Parameter.showPop=true;
+			}
+		}
+		public void showTiaoJiao() {
+			Log.d(poptest,"POPWINDOW layout");
+			ShowTiaoJiao pop_menu_tiaojiao = new ShowTiaoJiao(this, onClickListener); 
+			pop_menu_tiaojiao.showAtLocation(findViewById(R.id.camera_preview),Gravity.CENTER, 0, 0); 
+
+		}
+		/*popupWindow*/
+		private View.OnClickListener onClickListener = new View.OnClickListener() { 
+			  @Override
+			  public void onClick(View v) { 
+			  
+			    switch (v.getId()) { 
+			     
+				case R.id.pop_shipin: 
+					mPreview.camera_release();
+					Parameter.clickThread=false;
+					Log.d("ffmright","Mainactivity finish");
+					 Intent intent = new Intent();
+						intent.setClass(MainActivity.this,MediaRecorder_c.class);
+						MainActivity.this.startActivity(intent);
+						finish();
+								
+					break;
+				
+				case R.id.pop_wenjianguanli:
+						showDialog_wenjianguanli(MainActivity.this);
+					break;
+				case R.id.pop_moshi:
+						showDialog_moshi(MainActivity.this);
+					break;
+				case R.id.pop_zengyi:
+					showDialog_zengyi(MainActivity.this);
+					break;
+				case R.id.pop_tiaojiao:
+					showTiaoJiao();
+					break;
+				case R.id.btn_tj_add:
+					fpga.Ioctl(10, 0);
+                	Parameter.zengyi=Parameter.zengyi+1;
+                	textZengyi.setText(String.valueOf(Parameter.zengyi));
+					break;
+				case R.id.btn_tj_auto:
+                	textZengyi.setText("auto");
+					break;
+				case R.id.btn_tj_dec:
+					fpga.Ioctl(11, 0);
+                	Parameter.zengyi=Parameter.zengyi-1;
+                	textZengyi.setText(String.valueOf(Parameter.zengyi));
+					break;
+	            default:  
+	                break;  
+	            }  
+			  } 
+			};
+		 //显示文件存储
+			private void showDialog_wenjianguanli(Context context) {  
+	        AlertDialog.Builder builder = new AlertDialog.Builder(context);  
+	        //builder.setIcon(R.drawable.icon);  
+	        builder.setTitle("存储位置");  
+	        //builder.setMessage("请选择存储位置"); 
+	        
+	        
+	        builder.setNegativeButton("Udisk",  
+	                new DialogInterface.OnClickListener() {  
+	                    public void onClick(DialogInterface dialog, int whichButton) {  
+	                        Parameter.addr=1; 
+	                    }  
+	                });
+	        
+	        builder.setNeutralButton("SD",  
+	                new DialogInterface.OnClickListener() {  
+	                    public void onClick(DialogInterface dialog, int whichButton) {  
+	                        Parameter.addr=2; 
+	                    }  
+	                });  
+	        builder.setPositiveButton("local",  
+	                new DialogInterface.OnClickListener() {  
+	                    public void onClick(DialogInterface dialog, int whichButton) {  
+	                        Parameter.addr=3; 
+	                    }  
+	                });
+	        dialog=builder.show();  
+	    }  
+			//设置工作模式
+			private void showDialog_moshi(Context context) {  
+	        AlertDialog.Builder builder = new AlertDialog.Builder(context);  
+	        //builder.setIcon(R.drawable.icon);  
+	        builder.setTitle("工作模式");  
+	        //builder.setMessage("请选择存储位置"); 
+	        builder.setNegativeButton("融合",  
+	                new DialogInterface.OnClickListener() {  
+	                    public void onClick(DialogInterface dialog, int whichButton) {  
+	                    	fpga.Ioctl(0, 0);
+	                    	Parameter.moshi=0;
+	                    }  
+	                });
+	        builder.setNeutralButton("可见",  
+	                new DialogInterface.OnClickListener() {  
+	                    public void onClick(DialogInterface dialog, int whichButton) {  
+	                        fpga.Ioctl(1, 0);
+	                        Parameter.moshi=1;
+	                        //arg ， cmd
+	                    }  
+	                });
+	        builder.setPositiveButton("紫外",  
+	                new DialogInterface.OnClickListener() {  
+	                    public void onClick(DialogInterface dialog, int whichButton) {  
+	                    	fpga.Ioctl(2, 0);
+	                    	Parameter.moshi=2;
+	                    }  
+	                });  
+	        
+	        dialog=builder.show();  
+	    }  
+			//增益设置
+			private void showDialog_zengyi(Context context) {  
+	        AlertDialog.Builder builder = new AlertDialog.Builder(context);  
+	        //builder.setIcon(R.drawable.icon);  
+	        builder.setTitle("增益设置");  
+	        //builder.setMessage("请选择存储位置"); 
+	        builder.setNegativeButton("增益+",  
+	                new DialogInterface.OnClickListener() {  
+	                    public void onClick(DialogInterface dialog, int whichButton) {  
+	                    	fpga.Ioctl(10, 0);
+	                    	Parameter.zengyi=Parameter.zengyi+1;
+	                    	textZengyi.setText(String.valueOf(Parameter.zengyi));
+	                    	
+	                    }  
+	                });
+	        builder.setPositiveButton("增益-",  
+	                new DialogInterface.OnClickListener() {  
+	                    public void onClick(DialogInterface dialog, int whichButton) {  
+	                    	fpga.Ioctl(11, 0);
+	                    	Parameter.zengyi=Parameter.zengyi-1;
+	                    	textZengyi.setText(String.valueOf(Parameter.zengyi));
+	                    }  
+	                });  
+	        
+	        dialog=builder.show();  
+	    }  
+			//设置调焦
+			private void showDialog_tiaojiao(Context context) {  
+	        AlertDialog.Builder builder = new AlertDialog.Builder(context);  
+	        //builder.setIcon(R.drawable.icon);  
+	        builder.setTitle("调焦设置");  
+	        //builder.setMessage("请选择存储位置"); 
+	        builder.setNegativeButton("自动",  
+	                new DialogInterface.OnClickListener() {  
+	                    public void onClick(DialogInterface dialog, int whichButton) {  
+	                    	fpga.Ioctl(20, 0);
+	                    	Parameter.tiaojiao=0;
+	                    }  
+	                });
+	        builder.setNeutralButton("手动+",  
+	                new DialogInterface.OnClickListener() {  
+	                    public void onClick(DialogInterface dialog, int whichButton) {  
+	                        fpga.Ioctl(21, 0);
+	                        textTiaojiao.setText("手动");
+	                        //arg ， cmd
+	                        Parameter.tiaojiao=1;
+	                    }  
+	                });
+	        builder.setPositiveButton("手动-",  
+	                new DialogInterface.OnClickListener() {  
+	                    public void onClick(DialogInterface dialog, int whichButton) {  
+	                    	fpga.Ioctl(22, 0);
+	                    	Parameter.tiaojiao=1;
+	                    }  
+	                });  
+	        
+	        dialog=builder.show();  
+	    }  
+			 public native  int ffmpegcore(int argc,String[] argv);
+			    static{
+			    	System.loadLibrary("avutil-54");
+			    	System.loadLibrary("swresample-1");
+			    	System.loadLibrary("avcodec-56");
+			    	System.loadLibrary("avformat-56");
+			    	System.loadLibrary("swscale-3");
+			    	System.loadLibrary("postproc-53");
+			    	System.loadLibrary("avfilter-5");
+			    	System.loadLibrary("avdevice-56");
+			    	System.loadLibrary("sfftranscoder");
+			    }
+			    
+			    static {
+			        System.loadLibrary("I2CFPGA");
+			        System.loadLibrary("serial");
+				}
+	}
